@@ -1,0 +1,24 @@
+{% extends './base.html' %}
+
+{% block messages %}
+  {% include './head.html' %}
+
+  <div class="container mt-3 overflow-auto pb-5">
+    {% for message in messages %}
+      <div class="w-50 ms-auto mb-3">
+        <div class="bg-primary text-white rounded-3 shadow p-3">
+          <p class="mb-1">{{ message.text }}</p>
+          <small class="text-white-50 text-end d-block">{{ message.pub_date }}</small>
+        </div>
+      </div>
+      <div class="w-50 mb-3">
+        <div class="bg-light rounded-3 shadow-sm p-3">
+          <p class="mb-1">{{ message.text }}</p>
+          <small class="text-muted text-end d-block">{{ message.pub_date }}</small>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% include './chat_box.html' %}
+{% endblock %}

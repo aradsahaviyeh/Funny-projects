@@ -1,0 +1,13 @@
+<div class="position-fixed bottom-0 start-50 translate-middle-x mb-4 w-75">
+  <form action="{% url 'messages' %}" method="post" class="rounded-pill shadow overflow-hidden">
+    {% csrf_token %}
+    <div class="input-group">
+      <input type="text" name="message" class="form-control text-box border-0 rounded-pill rounded-end p-3" placeholder="message..." />
+      <button type="submit" class="btn btn-primary border-0 rounded-pill rounded-start p-3 px-5">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+          <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
