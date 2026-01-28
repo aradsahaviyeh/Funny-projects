@@ -1,4 +1,10 @@
-../env/
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 db.sqlite3
 *.pyc
 __pycache__/
