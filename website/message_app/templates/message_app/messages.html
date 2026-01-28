@@ -1,24 +1,114 @@
 {% extends './base.html' %}
+{% load static %}
 
-{% block messages %}
-  {% include './head.html' %}
+{% block content %}
+<div class="row " style="height: 100vh;">
 
-  <div class="container mt-3 overflow-auto pb-5">
-    {% for message in messages %}
-      <div class="w-50 ms-auto mb-3">
-        <div class="bg-primary text-white rounded-3 shadow p-3">
-          <p class="mb-1">{{ message.text }}</p>
-          <small class="text-white-50 text-end d-block">{{ message.pub_date }}</small>
+  <div class="col-4 bg-dark text-light p-0">
+
+    <div class="m-2 text-center d-flex justify-content-between">
+      <form method="get" action="{% url "find_contact" %}" class="w-75 mx-2">
+        <input type="text" name="name" class="form-control" placeholder="Search">
+      </form>
+      <button class="w-25 contact bg-light">
+        <a href="{% url "form_view" 'contact' %}" class="text-dark"> add contact</a>
+      </button>
+    </div>
+
+    <ul class="list-unstyled pt-3">
+      {% for contact in contacts %}
+        {% if contact.user_name == user_name %}
+        <div>
+          <li class="py-3 bg-light">
+            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40" class="mx-3">
+            <a class="text-dark ms-2" href="{% url "index" contact.user_name %}">
+              {{contact.user_name}}
+            </a>
+          </li>
         </div>
-      </div>
-      <div class="w-50 mb-3">
-        <div class="bg-light rounded-3 shadow-sm p-3">
-          <p class="mb-1">{{ message.text }}</p>
-          <small class="text-muted text-end d-block">{{ message.pub_date }}</small>
-        </div>
-      </div>
-    {% endfor %}
+        <hr class="text-secondary">
+        {% else %}
+        <li class="py-3">
+          <div>
+            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40" class="mx-3">
+            <a class="text-light ms-2" href="{% url "index" contact.user_name %}">
+              {{contact.user_name}}
+            </a>
+          </div>
+        </li>
+        <hr class="text-secondary">
+        {% endif %}
+      {% endfor %}
+    </ul>
   </div>
 
-  {% include './chat_box.html' %}
-{% endblock %}
+  <div class="col-8 position-relative p-0" style="height: 100vh;">
+
+    <div class="bg-primary text-light">
+      <div class="container py-3 d-flex align-items-center">
+        <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="50">
+        <p class="ms-3 mb-0">
+          {% if user_name %}
+            {{ user_name }}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="container overflow-auto"
+      style="
+        height: calc(100vh - 170px);
+        padding-top: 1rem;
+        padding-bottom: 120px;
+      "
+    >
+      {% for message in messages %}
+        {% if message.sender == request.user %}
+          <div class="w-50 ms-auto mb-3">
+            <div class="bg-primary text-white rounded-3 p-3 shadow">
+              <p class="mb-1">{{ message.text }}</p>
+              <small class="text-white-50 d-block text-end">
+                {{ message.created_at|time:"H:i:A" }}
+              </small>
+            </div>
+          </div>
+        {% else %}
+          <div class="w-50 mb-3">
+            <div class="bg-light rounded-3 p-3 shadow-sm">
+              <p class="mb-1">{{ message.text }}</p>
+              <small class="text-muted d-block text-end">
+                {{ message.created_at|time:"H:i:A" }}
+              </small>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="position-absolute bottom-0 start-50 translate-middle-x w-75 pb-3">
+      <form action="{% url "send_message" user_name %}" method="post" class="shadow rounded-pill overflow-hidden bg-white">
+        {% csrf_token %}
+        <div class="input-group">
+          <input
+            type="text"
+            name="message"
+            class="form-control border-0 rounded-pill rounded-end p-3"
+            placeholder="message..."
+          >
+          <button
+            type="submit"
+            class="btn btn-primary border-0 rounded-pill rounded-start px-4"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+              fill="currentColor" viewBox="0 0 16 16">
+              <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11Z"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}

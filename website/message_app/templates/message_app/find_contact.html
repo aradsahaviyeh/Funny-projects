@@ -1,0 +1,33 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row " style="height: 100vh;">
+
+  <div class="col-4 bg-dark text-light p-0">
+
+    <div class="m-2 text-center d-flex justify-content-between">
+      <form method="get" action="{% url "find_contact" %}" class="w-75 mx-2">
+        <input type="text" name="name" class="form-control" placeholder="Search">
+      </form>
+      <button class="w-25 contact bg-light">
+        <a href="{% url "form_view" 'contact' %}" class="text-dark"> add contact</a>
+      </button>
+    </div>
+
+    <ul class="list-unstyled p-3">
+        {% for contact in contacts %}
+        <li class="mb-2">
+            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40">
+            <a class="text-light ms-2" href="{% url "index" contact.user_name %}">
+                {{contact.user_name}}
+            </a>
+        </li>
+        <hr class="text-secondary">
+        {% endfor %}
+    </ul>
+  </div>
+
+  
+</div>
+{% endblock content %}
