@@ -72,8 +72,8 @@ def send_message(request, name=None):
 
 
 
-def form_view(request, name):
-    if request.method == "POST" and name == "contact":
+def form_view(request, _format):
+    if request.method == "POST" and _format == "contact":
         user_name = request.POST.get("name")
         email = request.POST.get("email")
         contact_user = User.objects.get(email=email)

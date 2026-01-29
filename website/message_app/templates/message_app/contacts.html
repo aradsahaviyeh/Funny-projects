@@ -1,0 +1,31 @@
+{% load static %}
+<div class="col-4 bg-dark text-light p-0">
+
+    {% include "message_app/header_contacts.html" %}
+
+    <ul class="list-unstyled pt-3">
+      {% for contact in contacts %}
+        {% if contact.user_name == user_name %}
+        <div>
+          <li class="py-3 bg-light">
+            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40" class="mx-3">
+            <a class="text-dark ms-2" href="{% url "index" contact.user_name %}">
+              {{contact.user_name}}
+            </a>
+          </li>
+        </div>
+        <hr class="text-secondary">
+        {% else %}
+        <li class="py-3">
+          <div>
+            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40" class="mx-3">
+            <a class="text-light ms-2" href="{% url "index" contact.user_name %}">
+              {{contact.user_name}}
+            </a>
+          </div>
+        </li>
+        <hr class="text-secondary">
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>

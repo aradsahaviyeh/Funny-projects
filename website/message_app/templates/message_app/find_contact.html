@@ -1,19 +1,16 @@
 {% extends './base.html' %}
 {% load static %}
 
+{% block style %}
+  <link rel="stylesheet" href="{% static 'message_app/style.css' %}">
+{% endblock style %}
+
 {% block content %}
 <div class="row " style="height: 100vh;">
 
   <div class="col-4 bg-dark text-light p-0">
 
-    <div class="m-2 text-center d-flex justify-content-between">
-      <form method="get" action="{% url "find_contact" %}" class="w-75 mx-2">
-        <input type="text" name="name" class="form-control" placeholder="Search">
-      </form>
-      <button class="w-25 contact bg-light">
-        <a href="{% url "form_view" 'contact' %}" class="text-dark"> add contact</a>
-      </button>
-    </div>
+    {% include "message_app/header_contacts.html" %}
 
     <ul class="list-unstyled p-3">
         {% for contact in contacts %}
