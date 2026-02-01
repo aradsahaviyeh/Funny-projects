@@ -1,5 +1,5 @@
     <div class="m-2 text-center d-flex justify-content-between">
-      <form method="get" action="{% url "find_contact" %}" class="w-100 mx-2">
+      <form method="get" action="" class="w-100 mx-2">
         <input type="text" name="name" class="form-control" placeholder="Search">
       </form>
       <button class="contact bg-light" id="menu">
@@ -10,6 +10,6 @@
     </div>
     <script>
         document.getElementById("menu").addEventListener("click",() => {
-            window.location.href = "{% url "form_view" 'contact' %}";
+            window.location.href.post = "";
         })
     </script>

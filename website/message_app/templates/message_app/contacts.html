@@ -4,26 +4,26 @@
     {% include "message_app/header_contacts.html" %}
 
     <ul class="list-unstyled pt-3">
-      {% for contact in contacts %}
-        {% if contact.user_name == user_name %}
+      {% for cont in contacts %}
+        {% if cont == contact %}
         <div>
           <li class="py-3 bg-light">
             <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40" class="mx-3">
-            <a class="text-dark ms-2" href="{% url "index" contact.user_name %}">
-              {{contact.user_name}}
+            <a class="text-dark ms-2" href="{% url "messages" cont.contact_name %}">
+              {{cont.contact_name}}
             </a>
           </li>
         </div>
         <hr class="text-secondary">
         {% else %}
-        <li class="py-3">
-          <div>
+        <div>
+          <li class="py-3">
             <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40" class="mx-3">
-            <a class="text-light ms-2" href="{% url "index" contact.user_name %}">
-              {{contact.user_name}}
+            <a class="text-light ms-2" href="{% url "messages" cont.contact_name %}">
+              {{cont.contact_name}}
             </a>
-          </div>
-        </li>
+          </li>
+        </div>
         <hr class="text-secondary">
         {% endif %}
       {% endfor %}

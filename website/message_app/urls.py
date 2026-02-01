@@ -3,9 +3,8 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.index, name="index"),
-    path("find_contact", views.find_contact , name="find_contact"),
-    path("form_view/<str:_format>", views.form_view, name="form_view"),
-    path("<str:name>", views.index, name="index"),
-    path("send_message/<str:name>", views.send_message, name="send_message"),
+    path("", views.home, name="home"),
+    path("messages", views.messages, name="messages"),
+    path("messages/<str:contact_name>", views.messages, name="messages"),
+    path("send_message/", views.send_message, name="send_message"),
 ]
