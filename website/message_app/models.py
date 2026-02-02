@@ -38,13 +38,14 @@ class Chat(models.Model):
 
 
 class Message(models.Model):
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, default="")
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.text[:20]} in chat : {self.chat}"
+        return f"{self.sender} sent : {self.text[:20]} in chat : {self.chat}"
 
 
 class Contact(models.Model):

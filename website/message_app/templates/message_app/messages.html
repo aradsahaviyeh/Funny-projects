@@ -8,6 +8,7 @@
 {% endblock style %}
 
 {% block content %}
+
 <div class="row " style="height: 100vh;">
 
   {% include "message_app/contacts.html" %}
@@ -16,10 +17,10 @@
 
     <div class="bg-primary text-light">
       <div class="container py-3 d-flex align-items-center">
-        <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="50">
-        <p class="ms-3 mb-0">
-          {{contact}}
-        </p>
+          <img src="{{ contact.profile_photo.url }}"
+          width="45" height="45"
+          class="rounded-circle me-2">
+          <p class="ms-3 mb-0">{{ contact_name }}</p>
       </div>
     </div>
 
@@ -31,27 +32,31 @@
         padding-bottom: 120px;
       "
     >
+
+
+
       {% for message in messages %}
-        {% if message.sender == profile %}
-          <div class="w-50 ms-auto mb-3">
-            <div class="bg-primary text-white rounded-3 p-3 shadow">
-              <p class="mb-1">{{ message.text }}</p>
-              <small class="text-white-50 d-block text-end">
-                {{ message.created_at|time:"H:i:A" }}
-              </small>
-            </div>
-          </div>
-        {% else %}
-          <div class="w-50 mb-3">
-            <div class="bg-light rounded-3 p-3 shadow-sm">
-              <p class="mb-1">{{ message.text }}</p>
-              <small class="text-muted d-block text-end">
-                {{ message.created_at|time:"H:i:A" }}
-              </small>
-            </div>
-          </div>
-        {% endif %}
+          {% if message.sender == request.user.profile %}
+              <div class="w-50 ms-auto mb-3">
+                  <div class="bg-primary text-white rounded-3 p-3 shadow">
+                      <p class="mb-1">{{ message.text }}</p>
+                      <small class="text-white-50 d-block text-end">
+                          {{ message.created_at|time:"H:i A" }}
+                      </small>
+                  </div>
+              </div>
+          {% else %}
+              <div class="w-50 mb-3">
+                  <div class="bg-light rounded-3 p-3 shadow">
+                      <p class="mb-1">{{ message.text }}</p>
+                      <small class="text-muted d-block text-start">
+                          {{ message.created_at|time:"H:i A" }}
+                      </small>
+                  </div>
+              </div>
+          {% endif %}
       {% endfor %}
+
     </div>
 
     <div class="position-absolute bottom-0 start-50 translate-middle-x w-75 pb-3">
@@ -93,4 +98,6 @@
     form.submit();
 });
 </script>
+
 {% endblock content %}
+

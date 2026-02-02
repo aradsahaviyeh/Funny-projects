@@ -1,0 +1,12 @@
+<html>
+    <body>
+        <form action="" method="post">
+            {% csrf_token %}    
+            <label for="username">please enter your name.</label>
+            <input id="username" name="username" type="text"><br><br>
+            <label for="email">please enter your email to.</label>
+            <input id="email" name="email" type="email"><br><br>
+            <button type="submit"> login </button>
+        </form>
+    </body>
+</html>

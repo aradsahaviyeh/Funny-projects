@@ -1,31 +1,35 @@
-{% load static %}
 <div class="col-4 bg-dark text-light p-0">
 
     {% include "message_app/header_contacts.html" %}
 
     <ul class="list-unstyled pt-3">
-      {% for cont in contacts %}
-        {% if cont == contact %}
-        <div>
-          <li class="py-3 bg-light">
-            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40" class="mx-3">
-            <a class="text-dark ms-2" href="{% url "messages" cont.contact_name %}">
-              {{cont.contact_name}}
-            </a>
-          </li>
-        </div>
-        <hr class="text-secondary">
-        {% else %}
-        <div>
-          <li class="py-3">
-            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40" class="mx-3">
-            <a class="text-light ms-2" href="{% url "messages" cont.contact_name %}">
-              {{cont.contact_name}}
-            </a>
-          </li>
-        </div>
-        <hr class="text-secondary">
+      {% for item in chat_items %}
+      <li class="p-1 {% if item.profile == contact %} bg-light {% endif %}" id="contact">
+        <a href="{% url "message_detail" item.profile.id %}"
+        class="d-flex align-items-center p-2 text-decoration-none"
+        >
+        
+        {% if item.profile.profile_photo %}
+        <img src="{{ item.profile.profile_photo.url }}"
+        width="45" height="45"
+        class="rounded-circle me-2">
         {% endif %}
-      {% endfor %}
+        
+        <div>
+          <div class="fw-bold {% if item.profile == contact %} text-dark {% else %} text-light {% endif %}">
+            {{ item.display_name }}
+          </div>
+          
+          {% if item.last_message %}
+          <small class="text-muted">
+            {{ item.last_message.text|truncatechars:30 }}
+          </small>
+          {% endif %}
+        </div>
+      </a>
+    </li>
+    <hr class="contact_hr">
+    {% endfor %}
     </ul>
-  </div>
+
+</div>
