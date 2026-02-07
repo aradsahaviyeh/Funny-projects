@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponseBadRequest, HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import login
@@ -17,9 +17,10 @@ def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")
-        user, created = User.objects.get_or_create(username=username, email=email)
+        password = request.POST.get("password")
+        user, created = User.objects.get_or_create(username=username, email=email, password=password)
         if created:
-            Profile.objects.create(user=user, profile_name=username)
+            Profile.objects.create(user=user, profile_name=username, email=email)
         login(request, user)
         return redirect("messages")
     return render(
@@ -28,7 +29,10 @@ def login_view(request):
     )
 
 
+
+
 def message_view(request, profile_id=None):
+
     if not request.user.is_authenticated:
         return redirect("login")
 
@@ -57,7 +61,12 @@ def message_view(request, profile_id=None):
         })
 
     # Selected chat
+    contact_name = None
+
+
+    message_detail = False
     if profile_id:
+        message_detail = True
         try:
             contact_profile = Profile.objects.get(id=profile_id)
             try:
@@ -72,6 +81,7 @@ def message_view(request, profile_id=None):
             selected_chat_messages = []
 
     return render(request, "message_app/messages.html", {
+        "message_detail" : message_detail,
         "chat_items": chat_items,
         "messages": selected_chat_messages,
         "contact": contact_profile,
@@ -83,24 +93,51 @@ def message_view(request, profile_id=None):
 
 
 
-def send_message(request):
+def send_message(request, profile_id):
     if request.method == "POST":
+        sender_profile = Profile.objects.get(user=request.user)
+        receiver_profile = Profile.objects.get(id=profile_id)
+
+        chat = Chat.objects.filter(
+            profiles=sender_profile
+        ).filter(
+            profiles=receiver_profile
+        ).first()
+
+        if not chat:
+            chat = Chat.objects.create()
+            chat.profiles.add(sender_profile, receiver_profile)
+
         text = request.POST.get("text")
-        name = request.POST.get("name")
+        Message.objects.create(
+            sender=sender_profile,
+            chat=chat,
+            text=text
+        )
 
-        if text and name:
-            user_profile = Profile.objects.get(user=request.user)
-            contact = Contact.objects.get(
-                user=user_profile,
-                contact_name=name
-            )
+        return redirect("message_detail", profile_id)
 
-            Message.objects.create(
-                sender=user_profile,
-                receiver=contact.contact,
-                text=text
-            )
 
-            return redirect("messages", name)
+def find_message(request):
+    content = request.GET["search"]
+    profiles = Profile.objects.filter(profile_name=content)
+    contacts = Contact.objects.filter(contact_name=content)
+    return render(
+        request,
+        "message_app/find_message.html",
+        {
+            "profiles": profiles,
+            "contacts": contacts,
+        }
+    )
 
-    return redirect("messages")
+def user_profile(request):
+    if not request.user.is_authenticated:
+        return redirect("login")
+    profile = Profile.objects.get(user=request.user)
+    return render(request, "message_app/profile.html", {"profile": profile})
+
+
+def contact_profile_view(request, profile_id):
+    contact = get_object_or_404(Profile, id=profile_id)
+    return render(request, "message_app/contact_profile.html", {"contact": contact})

@@ -1,0 +1,8 @@
+.message-status {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.7); /* رنگ تیک‌ها برای پیام‌های فرستنده */
+}
+
+.bg-light .message-status {
+  color: rgba(0,0,0,0.4); /* پیام‌های دریافت‌شده */
+}

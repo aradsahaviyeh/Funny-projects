@@ -1,4 +1,6 @@
+{% load static %}
 <div class="col-4 bg-dark text-light p-0">
+
 
     {% include "message_app/header_contacts.html" %}
 
@@ -9,11 +11,13 @@
         class="d-flex align-items-center p-2 text-decoration-none"
         >
         
-        {% if item.profile.profile_photo %}
-        <img src="{{ item.profile.profile_photo.url }}"
+        <img src="{% if itme.profile.profile_photo %}
+              {{ contact.profile_photo.url }}
+            {% else %}
+              {% static 'message_app/images/Circle-icons-profile.svg.png' %}
+            {% endif %}"
         width="45" height="45"
         class="rounded-circle me-2">
-        {% endif %}
         
         <div>
           <div class="fw-bold {% if item.profile == contact %} text-dark {% else %} text-light {% endif %}">
