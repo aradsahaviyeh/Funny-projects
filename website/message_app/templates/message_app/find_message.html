@@ -2,19 +2,17 @@
 {% load static %}
 
 {% block style %}
-  <link rel="stylesheet" href="{% static 'message_app/style.css' %}">
   <link rel="stylesheet" href="{% static 'message_app/contacts.css' %}">
+  <link rel="stylesheet" href="{% static 'message_app/chats.css' %}"
 {% endblock style %}
 
 {% block content %}
 <div class="row " style="height: 100vh;">
 
-  <div class="col-4 bg-dark text-light p-0">
+  <div class="col-12 bg-dark text-light p-0">
 
     {% include "message_app/header_contacts.html" %}
 
-    {{profiles}}
-    {{contacts}}
 
     {% if profiles %}
       <ul class="list-unstyled p-3">
@@ -34,7 +32,7 @@
         {% for contact in contacts %}
         <li class="mb-2">
             <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40">
-            <a class="text-light ms-2" href="">
+            <a class="text-light ms-2" href="{% url "message_detail" contact.contact.id %}">
                 {{contact}}
             </a>
         </li>
@@ -44,6 +42,5 @@
     {% endif %}
   </div>
 
-  
 </div>
 {% endblock content %}

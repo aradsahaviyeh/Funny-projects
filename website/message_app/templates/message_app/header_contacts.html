@@ -5,10 +5,10 @@
         <span></span>
         <span></span>
       </button>
-    
+
       <div id="menu" class="menu">
         <a href="{% url "user_profile" %}">پروفایل شما</a>
-        <a href="">مخاطبین</a>
+        <a href="{% url "my_contacts" %}">مخاطبین</a>
         <a href="#">تنظیمات</a>
         <a href="#">خروج از اکانت</a>
       </div>
@@ -25,10 +25,22 @@
 
   btn.addEventListener("click", (e) => {
     e.stopPropagation();
+    e.preventDefault(); // این خط را اضافه کنید
     menu.classList.toggle("active");
   });
 
-  document.addEventListener("click", () => {
-    menu.classList.remove("active");
+  document.addEventListener("click", (e) => {
+    // اگر کلیک روی خود منو باشد، نباید بسته شود
+    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+      menu.classList.remove("active");
+    }
+  });
+
+  // مطمئن شوید لینک‌ها کلیک می‌شوند
+  menu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') {
+      // منو را ببندید
+      menu.classList.remove("active");
+    }
   });
 </script>

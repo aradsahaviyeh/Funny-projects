@@ -3,13 +3,14 @@
 
 {% block style %}
   <link rel="stylesheet" href="{% static 'message_app/messages.css' %}" />
-  <link rel="stylesheet" href="{% static 'message_app/contacts.css' %}" />
+  <link rel="stylesheet" href="{% static 'message_app/chats.css' %}" />
 {% endblock %}
 
 {% block content %}
   <div class="row" style="height: 100vh;">
-    {% include 'message_app/contacts.html' %}
+    {% include 'message_app/chats.html' %}
 
+    {% if message_detail %}
     <div class="col-8 position-relative p-0" style="height: 100vh;">
       <div class="bg-primary text-light">
         <div class="container py-3 d-flex align-items-center" id="chat_profile_info">
@@ -73,7 +74,7 @@
       </div>
     </div>
   </div>
-
+  {% endif %}
 
 
 

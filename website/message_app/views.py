@@ -1,13 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-from django.urls import reverse
+from django.http import HttpResponseBadRequest
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
+
 from .models import Message, Contact, Profile, Chat
-from django.db import models
 
 
 
+
+    
 def home(request):
     return render(request, "message_app/home.html")
 
@@ -18,39 +20,59 @@ def login_view(request):
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
-        user, created = User.objects.get_or_create(username=username, email=email, password=password)
-        if created:
-            Profile.objects.create(user=user, profile_name=username, email=email)
+
+        user = authenticate(username=username, password=password)
+
+        if user is None:
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password
+            )
+            Profile.objects.create(
+                user=user,
+                profile_name=username,
+                email=email
+            )
+
         login(request, user)
         return redirect("messages")
-    return render(
-        request,
-        "message_app/login.html"
-    )
+
+    return render(request, "message_app/login.html")
 
 
 
 
+@login_required
 def message_view(request, profile_id=None):
+    my_profile = request.user.profile
 
-    if not request.user.is_authenticated:
-        return redirect("login")
-
-    my_profile = Profile.objects.get(user=request.user)
-
-    chats = Chat.objects.filter(profiles=my_profile).prefetch_related("profiles", "message_set").order_by("-last_chat")
+    chats = Chat.objects.filter(
+        profiles=my_profile
+    ).prefetch_related(
+        "profiles", "message_set"
+    ).order_by("-last_chat")
 
     chat_items = []
     selected_chat_messages = []
     contact_profile = None
+    contact_name = None
+    message_detail = False
 
     for chat in chats:
         other_profile = chat.profiles.exclude(id=my_profile.id).first()
         if not other_profile:
             continue
 
-        contact = Contact.objects.filter(user=my_profile, contact=other_profile).first()
-        display_name = contact.contact_name if contact else other_profile.profile_name
+        contact = Contact.objects.filter(
+            user=my_profile,
+            contact=other_profile
+        ).first()
+
+        display_name = (
+            contact.contact_name if contact else other_profile.profile_name
+        )
+
         last_message = chat.message_set.order_by("-created_at").first()
 
         chat_items.append({
@@ -60,28 +82,32 @@ def message_view(request, profile_id=None):
             "last_message": last_message,
         })
 
-    # Selected chat
-    contact_name = None
 
-
-    message_detail = False
     if profile_id:
+        is_detail = True
         message_detail = True
-        try:
-            contact_profile = Profile.objects.get(id=profile_id)
-            try:
-                contact_name = Contact.objects.get(user=my_profile, contact=contact_profile).contact_name
-            except:
-                contact_name = contact_profile.profile_name
-            selected_chat = Chat.objects.filter(profiles=my_profile).filter(profiles=contact_profile).first()
-            if selected_chat:
-                selected_chat_messages = selected_chat.message_set.order_by("created_at")
-        except Profile.DoesNotExist:
-            contact_profile = None
-            selected_chat_messages = []
+        contact_profile = get_object_or_404(Profile, id=profile_id)
+
+        contact = Contact.objects.filter(
+            user=my_profile,
+            contact=contact_profile
+        ).first()
+
+        contact_name = (
+            contact.contact_name if contact else contact_profile.profile_name
+        )
+
+        selected_chat = Chat.objects.filter(
+            profiles=my_profile
+        ).filter(
+            profiles=contact_profile
+        ).first()
+
+        if selected_chat:
+            selected_chat_messages = selected_chat.message_set.order_by("created_at")
 
     return render(request, "message_app/messages.html", {
-        "message_detail" : message_detail,
+        "message_detail": message_detail,
         "chat_items": chat_items,
         "messages": selected_chat_messages,
         "contact": contact_profile,
@@ -89,39 +115,101 @@ def message_view(request, profile_id=None):
     })
 
 
+@login_required(login_url="login")
+def my_contacts(request):
+    contacts = Contact.objects.filter(
+        user = request.user.profile
+    )
+    return render(
+        request,
+        "message_app/my_contacts.html",
+        {
+            "contacts" : contacts,
+        }
+    )
 
 
-
-
+@login_required
 def send_message(request, profile_id):
+    if request.method != "POST":
+        return HttpResponseBadRequest()
+
+    sender_profile = request.user.profile
+    receiver_profile = get_object_or_404(Profile, id=profile_id)
+
+    if sender_profile == receiver_profile:
+        return HttpResponseBadRequest("نمی‌تونی به خودت پیام بدی")
+
+    text = request.POST.get("text")
+    if not text:
+        return HttpResponseBadRequest("پیام خالیه")
+
+    chat = Chat.objects.filter(
+        profiles=sender_profile
+    ).filter(
+        profiles=receiver_profile
+    ).first()
+
+    if not chat:
+        chat = Chat.objects.create()
+        chat.profiles.add(sender_profile, receiver_profile)
+
+    Message.objects.create(
+        sender=sender_profile,
+        chat=chat,
+        text=text
+    )
+
+    return redirect("message_detail", profile_id)
+
+
+
+
+@login_required
+def add_contact(request):
     if request.method == "POST":
-        sender_profile = Profile.objects.get(user=request.user)
-        receiver_profile = Profile.objects.get(id=profile_id)
+        profile = request.user.profile
+        email = request.POST.get("email")
+        contact_name = request.POST.get("contact_name")
 
-        chat = Chat.objects.filter(
-            profiles=sender_profile
-        ).filter(
-            profiles=receiver_profile
-        ).first()
+        try:
+            contact_profile = Profile.objects.get(email=email)
+        except Profile.DoesNotExist:
+            return HttpResponseBadRequest("کاربر پیدا نشد")
 
-        if not chat:
-            chat = Chat.objects.create()
-            chat.profiles.add(sender_profile, receiver_profile)
+        if contact_profile == profile:
+            return HttpResponseBadRequest("نمی‌تونی خودتو اضافه کنی")
 
-        text = request.POST.get("text")
-        Message.objects.create(
-            sender=sender_profile,
-            chat=chat,
-            text=text
+        if Contact.objects.filter(user=profile, contact=contact_profile).exists():
+            return HttpResponseBadRequest("این کانتکت قبلاً اضافه شده")
+
+        Contact.objects.create(
+            user=profile,
+            contact=contact_profile,
+            contact_name=contact_name
         )
 
-        return redirect("message_detail", profile_id)
+        return redirect("messages")
+
+    return render(request, "message_app/add_contact.html")
 
 
+
+
+
+@login_required
 def find_message(request):
-    content = request.GET["search"]
-    profiles = Profile.objects.filter(profile_name=content)
-    contacts = Contact.objects.filter(contact_name=content)
+    content = request.GET.get("search", "")
+    profiles = None
+    if "@" in content:
+        profiles = Profile.objects.filter(
+            profile_username__icontains=content
+        )
+
+    contacts = Contact.objects.filter(
+        contact_name__icontains=content
+    )
+
     return render(
         request,
         "message_app/find_message.html",
@@ -131,13 +219,21 @@ def find_message(request):
         }
     )
 
+
+@login_required
 def user_profile(request):
-    if not request.user.is_authenticated:
-        return redirect("login")
-    profile = Profile.objects.get(user=request.user)
-    return render(request, "message_app/profile.html", {"profile": profile})
+    profile = request.user.profile
+    return render(
+        request,
+        "message_app/profile.html",
+        {"profile": profile}
+    )
 
-
+@login_required
 def contact_profile_view(request, profile_id):
     contact = get_object_or_404(Profile, id=profile_id)
-    return render(request, "message_app/contact_profile.html", {"contact": contact})
+    return render(
+        request,
+        "message_app/contact_profile.html",
+        {"contact": contact}
+    )

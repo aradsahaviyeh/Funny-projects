@@ -1,0 +1,26 @@
+.add-contact-container {
+    text-align: center;
+    padding-top: 100px;
+    width: 800px;
+    height: 500px;
+    margin-top: 50px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 50px grey;
+}
+
+.add-contact-container > h4{
+    text-shadow: 2px 2px 20px black;
+}
+
+
+.add-contact-form {
+  width: 300px;
+  margin: auto;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 500px #4682B4;
+}
+
+.add-contact-form input {
+  text-align: right;
+}

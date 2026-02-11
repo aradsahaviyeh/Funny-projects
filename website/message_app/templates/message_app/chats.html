@@ -1,0 +1,36 @@
+{% load static %}
+<div class="{% if message_detail %}col-4 bg-dark text-light p-0 {% else %} col-12 bg-dark text-light p-0  {% endif %}">
+
+  {% include "message_app/header_contacts.html" %}
+
+  <ul class="list-unstyled pt-3">
+    {% for item in chat_items %}
+      <li class="p-1 {% if item.profile == contact %} bg-light {% endif %}">
+        <a href="{% url 'message_detail' item.profile.id %}" class="d-flex align-items-center p-2 text-decoration-none">
+          <img src="{% if item.profile.profile_photo %}
+              {{ item.profile.profile_photo.url }}
+            {% else %}
+              {% static 'message_app/images/Circle-icons-profile.svg.png' %}
+            {% endif %}"
+            width="45"
+            height="45"
+            class="rounded-circle me-2" />
+
+          <div>
+            <div class="fw-bold {% if item.profile == contact %}
+                 text-dark
+              {% else %}
+                 text-light
+              {% endif %}">{{ item.display_name }}</div>
+
+            {% if item.last_message %}
+              <small class="text-muted">{{ item.last_message.text|truncatechars:30 }}</small>
+            {% endif %}
+          </div>
+        </a>
+      </li>
+      <hr class="contact_hr" />
+    {% endfor %}
+  </ul>
+
+</div>

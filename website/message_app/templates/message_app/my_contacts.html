@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block style %}
-  <link rel="stylesheet" href="{% static 'message_app/contacts.css' %}" />
+  <link rel="stylesheet" href="{% static 'message_app/my_contacts.css' %}" />
 {% endblock %}
 
 {% block content %}
-  <div class="w-75 contact-list bg-primary text-center">
+  <div class="w-75 contact-list text-center bg-primary">
     <ul class="list-unstyled">
       {% for contact in contacts %}
           <li class="list-item bg-light"
