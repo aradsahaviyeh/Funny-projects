@@ -1,1 +1,1 @@
-Hello this is a funny Mirror Messager project
+Hello this is a Messager project
