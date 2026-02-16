@@ -1,0 +1,77 @@
+/* my_contacts.css - بازطراحی کامل */
+.contacts-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+    padding: 40px 20px;
+}
+
+.contacts-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contacts-card {
+    background: white;
+    border-radius: 40px;
+    box-shadow: 0 20px 60px rgba(13, 110, 253, 0.1);
+    padding: 35px;
+    animation: fadeIn 0.4s ease;
+}
+
+.contacts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.contacts-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.contacts-title i {
+    font-size: 32px;
+    color: #0d6efd;
+}
+
+.contacts-title h3 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.contact-count {
+    background: linear-gradient(145deg, #0d6efd, #0a58ca);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* جستجو */
+.search-box {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.search-box i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+    font-size: 1.1rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 15px 25px;
+    padding-right: 55px;
+    border: 2px solid #ecf0f1;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}

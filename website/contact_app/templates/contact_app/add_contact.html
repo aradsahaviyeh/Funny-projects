@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}افزودن مخاطب{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card shadow-lg border-0 rounded-4 p-4 p-md-5" style="max-width: 500px; width: 100%;">
+
+    <div class="text-center mb-4">
+      <i class="bi bi-person-plus-fill fs-1 text-primary"></i>
+      <h3 class="fw-bold mt-3">افزودن مخاطب جدید</h3>
+      <p class="text-secondary small">با وارد کردن ایمیل، دوستان خود را پیدا کنید</p>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <!-- خطاهای کلی فرم -->
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <!-- نام مخاطب -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">نام مخاطب</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0">
+            <i class="bi bi-person"></i>
+          </span>
+          {{ form.contact_name }}
+        </div>
+
+        {% if form.contact_name.errors %}
+          <div class="text-danger small mt-1">
+            {{ form.contact_name.errors }}
+          </div>
+        {% endif %}
+
+        <div class="form-text mt-2">
+          یک نام دلخواه برای مخاطب خود انتخاب کنید
+        </div>
+      </div>
+
+      <!-- ایمیل -->
+      <div class="mb-3">
+        <label class="form-label fw-semibold">ایمیل</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0">
+            <i class="bi bi-envelope"></i>
+          </span>
+          {{ form.email }}
+        </div>
+
+        {% if form.email.errors %}
+          <div class="text-danger small mt-1">
+            {{ form.email.errors }}
+          </div>
+        {% endif %}
+
+        <div class="form-text mt-2">
+          ایمیل دوست خود را وارد کنید
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary-gradient w-100 py-2 rounded-pill mt-3">
+        افزودن مخاطب
+      </button>
+
+      <a href="javascript:history.back()" class="btn btn-outline-secondary w-100 mt-3 rounded-pill">
+        بازگشت
+      </a>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

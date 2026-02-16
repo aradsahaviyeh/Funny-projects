@@ -1,6 +1,207 @@
-<html>
-    <body>
-        <h1>hello welcome to message app.</h1>
-        <h3>in this app you can send messages and talk to your friends.</h3>
-    </body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}خانه{% endblock %}
+
+{% block content %}
+<!-- نوبار شفاف -->
+<nav class="navbar navbar-expand-lg bg-transparent py-3">
+  <div class="container">
+    <a class="navbar-brand fw-bold text-primary" href="#">
+      <i class="bi bi-chat-dots-fill me-2"></i>پیام‌رسان
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="#features">امکانات</a></li>
+        <li class="nav-item"><a class="nav-link" href="#how">نحوه کار</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">تماس</a></li>
+      </ul>
+      <a href="{% url 'authentication_app:login' %}" class="btn btn-primary rounded-pill px-5">
+        <i class="bi bi-box-arrow-in-right me-2"></i>ورود
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- هیرو -->
+<section class="py-5">
+  <div class="container py-5">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1 class="display-3 fw-bold mb-4">
+          <span class="text-primary">ارتباط</span> آسان،
+          <span class="text-primary">سریع</span> و امن
+        </h1>
+        <p class="lead text-secondary mb-5">
+          با پیام‌رسان ما به راحتی با دوستان و همکارانت در ارتباط باش.
+          پیام‌های لحظه‌ای، گفتگوی گروهی و اشتراک‌گذاری فایل.
+        </p>
+        <div class="d-flex gap-3">
+          <a href="{% url 'authentication_app:login' %}" class="btn btn-primary-gradient btn-lg rounded-pill px-5 py-3">
+            شروع گفتگو <i class="bi bi-arrow-left me-2"></i>
+          </a>
+          <a href="#features" class="btn btn-outline-primary btn-lg rounded-pill px-5 py-3">
+            بیشتر بدانید
+          </a>
+        </div>
+        <!-- آمار -->
+        <div class="row mt-5 pt-4 g-4">
+          <div class="col-4">
+            <h2 class="fw-bold text-primary">+۱۰۰۰</h2>
+            <p class="text-secondary">کاربر فعال</p>
+          </div>
+          <div class="col-4">
+            <h2 class="fw-bold text-primary">+۵۰۰۰</h2>
+            <p class="text-secondary">پیام روزانه</p>
+          </div>
+          <div class="col-4">
+            <h2 class="fw-bold text-primary">+۲۰۰</h2>
+            <p class="text-secondary">گفتگوی فعال</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 text-center">
+        <img src="https://img.icons8.com/fluency/400/chat.png" alt="چت" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- امکانات -->
+<section id="features" class="py-5 bg-white">
+  <div class="container">
+    <div class="text-center mb-5">
+      <span class="badge bg-primary bg-opacity-10 text-primary px-4 py-2 rounded-pill">امکانات</span>
+      <h2 class="fw-bold display-6 mt-3">چرا ما رو انتخاب می‌کنید؟</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 p-4 text-center border-0 shadow-sm">
+          <div class="d-flex justify-content-center mb-3">
+            <span class="bg-primary bg-opacity-10 p-3 rounded-circle">
+              <i class="bi bi-lightning-charge-fill fs-2 text-primary"></i>
+            </span>
+          </div>
+          <h5 class="fw-bold">سرعت بالا</h5>
+          <p class="text-secondary small">ارسال و دریافت پیام در کسری از ثانیه</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 p-4 text-center border-0 shadow-sm">
+          <div class="d-flex justify-content-center mb-3">
+            <span class="bg-primary bg-opacity-10 p-3 rounded-circle">
+              <i class="bi bi-shield-check fs-2 text-primary"></i>
+            </span>
+          </div>
+          <h5 class="fw-bold">امنیت کامل</h5>
+          <p class="text-secondary small">رمزنگاری پیشرفته و حریم خصوصی</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 p-4 text-center border-0 shadow-sm">
+          <div class="d-flex justify-content-center mb-3">
+            <span class="bg-primary bg-opacity-10 p-3 rounded-circle">
+              <i class="bi bi-people-fill fs-2 text-primary"></i>
+            </span>
+          </div>
+          <h5 class="fw-bold">مدیریت مخاطبان</h5>
+          <p class="text-secondary small">اضافه کردن و سازماندهی آسان</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- نحوه کار -->
+<section id="how" class="py-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <span class="badge bg-primary bg-opacity-10 text-primary px-4 py-2 rounded-pill">نحوه کار</span>
+        <h2 class="fw-bold display-6 mt-3 mb-4">در ۳ قدم ساده</h2>
+        <div class="d-flex mb-4">
+          <span class="bg-primary-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">۱</span>
+          <div class="me-3">
+            <h5 class="fw-bold">ورود یا ثبت‌نام</h5>
+            <p class="text-secondary">با نام کاربری و ایمیل وارد شوید</p>
+          </div>
+        </div>
+        <div class="d-flex mb-4">
+          <span class="bg-primary-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">۲</span>
+          <div class="me-3">
+            <h5 class="fw-bold">اضافه کردن مخاطب</h5>
+            <p class="text-secondary">با ایمیل دوستان خود را پیدا کنید</p>
+          </div>
+        </div>
+        <div class="d-flex mb-4">
+          <span class="bg-primary-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">۳</span>
+          <div class="me-3">
+            <h5 class="fw-bold">شروع گفتگو</h5>
+            <p class="text-secondary">پیام خود را بنویسید و ارسال کنید</p>
+          </div>
+        </div>
+        <a href="{% url 'authentication_app:login' %}" class="btn btn-primary-gradient rounded-pill px-5 py-3 mt-3">
+          شروع کنید <i class="bi bi-arrow-left me-2"></i>
+        </a>
+      </div>
+      <div class="col-lg-6 text-center">
+        <img src="https://img.icons8.com/fluency/400/process.png" alt="مراحل" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5">
+  <div class="container">
+    <div class="bg-primary-gradient text-white rounded-5 p-5 text-center">
+      <h2 class="fw-bold display-6 mb-4">همین حالا شروع کنید!</h2>
+      <p class="lead mb-4 opacity-90">به جمع هزاران کاربر ما بپیوندید</p>
+      <a href="{% url 'authentication_app:login' %}" class="btn btn-light btn-lg rounded-pill px-5 py-3">
+        <i class="bi bi-box-arrow-in-right me-2"></i>ورود به پیام‌رسان
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- فوتر -->
+<footer class="bg-white py-5 mt-auto">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <h5 class="fw-bold text-primary">پیام‌رسان</h5>
+        <p class="text-secondary small">ارتباط آسان، سریع و امن برای همه</p>
+      </div>
+      <div class="col-md-2 mb-4">
+        <h6 class="fw-bold">لینک‌های سریع</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-decoration-none text-secondary">خانه</a></li>
+          <li><a href="#features" class="text-decoration-none text-secondary">امکانات</a></li>
+          <li><a href="#how" class="text-decoration-none text-secondary">نحوه کار</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-4">
+        <h6 class="fw-bold">ارتباط با ما</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-decoration-none text-secondary"><i class="bi bi-envelope me-2"></i>payam@gmail.com</a></li>
+          <li><a href="#" class="text-decoration-none text-secondary"><i class="bi bi-telephone me-2"></i>۰۲۱-۱۲۳۴۵۶۷۸</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-4">
+        <h6 class="fw-bold">ما را دنبال کنید</h6>
+        <div class="d-flex gap-3">
+          <a href="#" class="text-secondary fs-4"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-secondary fs-4"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-secondary fs-4"><i class="bi bi-telegram"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr class="my-4">
+    <div class="text-center text-secondary small">
+    </div>
+  </div>
+</footer>
+{% endblock %}

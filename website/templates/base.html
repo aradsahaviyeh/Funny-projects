@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پیام‌رسان | {% block title %}{% endblock %}</title>
+
+  <!-- Bootstrap 5 RTL -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <!-- Vazir Font -->
+  <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet">
+
+  <style>
+    * { font-family: 'Vazir', sans-serif; }
+    body { background: #f8faff; }
+    .bg-primary-gradient {
+      background: linear-gradient(145deg, #0d6efd, #0a58ca);
+    }
+    .btn-primary-gradient {
+      background: linear-gradient(145deg, #0d6efd, #0a58ca);
+      border: none;
+      color: white;
+      transition: all 0.2s;
+    }
+    .btn-primary-gradient:hover {
+      background: linear-gradient(145deg, #0a58ca, #084298);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(13,110,253,0.3);
+    }
+    .card {
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    }
+    .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fff;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    .avatar-sm {
+      width: 40px;
+      height: 40px;
+    }
+    .avatar-lg {
+      width: 100px;
+      height: 100px;
+    }
+    /* انیمیشن fade-in */
+    .fade-in {
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* اسکرول بار نازک */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 10px; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+  {% block content %}{% endblock %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

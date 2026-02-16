@@ -38,8 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # frameworks
+    'rest_framework',
+
     # my apps
+    "authentication_app.apps.AuthenticationAppConfig",
     "message_app.apps.MessageAppConfig",
+    "profile_app.apps.ProfileAppConfig",
+    "contact_app.apps.ContactAppConfig",
 
 ]
 
@@ -61,7 +67,9 @@ ROOT_URLCONF = 'website.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,7 +130,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    "/var/www/static/",
+]
 
 
 MEDIA_URL = '/media/'

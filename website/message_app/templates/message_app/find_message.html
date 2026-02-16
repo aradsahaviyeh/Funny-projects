@@ -1,46 +1,78 @@
-{% extends './base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block style %}
-  <link rel="stylesheet" href="{% static 'message_app/contacts.css' %}">
-  <link rel="stylesheet" href="{% static 'message_app/chats.css' %}"
-{% endblock style %}
+{% block title %}جستجو{% endblock %}
 
 {% block content %}
-<div class="row " style="height: 100vh;">
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h4 class="fw-bold mb-0"><i class="bi bi-search me-2 text-primary"></i>جستجو</h4>
+          <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="bi bi-arrow-right me-2"></i>بازگشت
+          </a>
+        </div>
 
-  <div class="col-12 bg-dark text-light p-0">
+        <form method="get" class="mb-4">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+            <input type="text" name="search" class="form-control bg-light border-0" placeholder="جستجوی مخاطب یا پیام..." value="{{ request.GET.search }}">
+          </div>
+        </form>
 
-    {% include "message_app/header_contacts.html" %}
+        <!-- نتایج کاربران -->
+        {% if profiles %}
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-people fs-5 text-primary"></i>
+            <h6 class="fw-bold mb-0">کاربران پیدا شده</h6>
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill">{{ profiles|length }} کاربر</span>
+          </div>
+          <div class="list-group list-group-flush mb-4">
+            {% for profile in profiles %}
+              <a href="{% url 'message_detail' profile.id %}" class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0 bg-transparent px-0">
+                <img src="{% static 'images/Circle-icons-profile.svg.png' %}" class="avatar-sm rounded-circle" alt="avatar">
+                <div class="flex-grow-1">
+                  <h6 class="fw-bold mb-1">{{ profile.profile_name }}</h6>
+                  <small class="text-secondary">{{ profile.email }}</small>
+                </div>
+                <span class="badge bg-primary rounded-pill px-3 py-2">شروع گفتگو</span>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
 
+        <!-- نتایج مخاطبین -->
+        {% if contacts %}
+          <div class="d-flex align-items-center gap-2 mb-3 mt-4">
+            <i class="bi bi-bookmark-star fs-5 text-primary"></i>
+            <h6 class="fw-bold mb-0">مخاطبین شما</h6>
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-1 rounded-pill">{{ contacts|length }} مخاطب</span>
+          </div>
+          <div class="list-group list-group-flush">
+            {% for contact in contacts %}
+              <a href="{% url 'message_detail' contact.contact.id %}" class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0 bg-transparent px-0">
+                <img src="{% static 'images/Circle-icons-profile.svg.png' %}" class="avatar-sm rounded-circle" alt="avatar">
+                <div class="flex-grow-1">
+                  <h6 class="fw-bold mb-1">{{ contact }}</h6>
+                  <small class="text-secondary">{{ contact.contact.email }}</small>
+                </div>
+                <span class="badge bg-primary rounded-pill px-3 py-2">پیام</span>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
 
-    {% if profiles %}
-      <ul class="list-unstyled p-3">
-        {% for profile in profiles %}
-        <li class="mb-2">
-            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40">
-            <a class="text-light ms-2" href="">
-                {{profile}}
-            </a>
-        </li>
-        <hr class="text-secondary">
-        {% endfor %}
-      </ul>
-    {% endif %}
-    {% if contacts %}
-      <ul class="list-unstyled p-3">
-        {% for contact in contacts %}
-        <li class="mb-2">
-            <img src="{% static 'message_app/images/Circle-icons-profile.svg.png' %}" width="40">
-            <a class="text-light ms-2" href="{% url "message_detail" contact.contact.id %}">
-                {{contact}}
-            </a>
-        </li>
-        <hr class="text-secondary">
-        {% endfor %}
-      </ul>
-    {% endif %}
+        {% if not profiles and not contacts %}
+          <div class="text-center py-5">
+            <i class="bi bi-search fs-1 text-primary opacity-25"></i>
+            <p class="text-secondary mt-3">نتیجه‌ای برای "{{ request.GET.search }}" پیدا نشد</p>
+            <small class="text-secondary">مخاطب جدید اضافه کنید یا عبارت دیگری را جستجو کنید</small>
+          </div>
+        {% endif %}
+      </div>
+    </div>
   </div>
-
 </div>
-{% endblock content %}
+{% endblock %}

@@ -1,0 +1,22 @@
+<div class="d-flex align-items-center p-3 border-bottom">
+  <!-- دکمه منو -->
+  <div class="dropdown me-2">
+    <button class="btn btn-light rounded-circle m-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-list fs-5"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2">
+      <li><a class="dropdown-item rounded-3" href="{% url 'profile_app:profile' %}"><i class="bi bi-person me-2"></i>پروفایل شما</a></li>
+      <li><a class="dropdown-item rounded-3" href="{% url 'contact_app:my_contacts' %}"><i class="bi bi-people me-2"></i>مخاطبین</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item rounded-3 text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i>خروج</a></li>
+    </ul>
+  </div>
+
+  <!-- فرم جستجو -->
+  <form action="{% url 'find_message' %}" method="get" class="flex-grow-1">
+    <div class="input-group">
+      <span class="input-group-text bg-light border-0"><i class="bi bi-search text-secondary"></i></span>
+      <input type="text" name="search" class="form-control bg-light border-0" placeholder="جستجو..." value="{{ request.GET.search }}">
+    </div>
+  </form>
+</div>

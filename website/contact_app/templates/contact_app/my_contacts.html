@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}مخاطبین من{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-people-fill fs-2 text-primary"></i>
+            <h4 class="fw-bold mb-0">مخاطبین من</h4>
+          </div>
+          <span class="badge bg-primary-gradient px-4 py-2 rounded-pill">{{ contacts|length }} مخاطب</span>
+        </div>
+
+        <!-- جستجو -->
+        <div class="mb-4">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+            <input type="text" id="searchInput" class="form-control bg-light border-0" placeholder="جستجوی مخاطب...">
+          </div>
+        </div>
+
+        {% if contacts %}
+          <div class="list-group list-group-flush bg-transparent" id="contactsList">
+            {% for contact in contacts %}
+              <a href="{% url 'message_detail' contact.contact.id %}"
+                 class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0 bg-transparent px-0 py-3 contact-item"
+                 data-name="{{ contact.contact.profile_name }}"
+                 data-email="{{ contact.contact.email }}">
+                <img src="{% if contact.contact.profile_photo %}{{ contact.contact.profile_photo.url }}{% else %}{% static 'message_app/images/Circle-icons-profile.svg.png' %}{% endif %}"
+                     class="avatar" alt="avatar">
+                <div class="flex-grow-1">
+                  <h6 class="fw-bold mb-1">{{ contact }}</h6>
+                  <small class="text-secondary d-flex align-items-center gap-1">
+                    <i class="bi bi-envelope"></i> {{ contact.contact.email }}
+                  </small>
+                </div>
+                <span class="badge bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                  <i class="bi bi-chat-dots"></i>
+                </span>
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-5">
+            <i class="bi bi-person-plus fs-1 text-primary opacity-50"></i>
+            <h5 class="fw-bold mt-3">هنوز مخاطبی ندارید</h5>
+            <p class="text-secondary small">با اضافه کردن مخاطب جدید، می‌توانید گفتگو را شروع کنید</p>
+            <a href="{% url 'add_contact' %}" class="btn btn-primary-gradient rounded-pill px-5 py-2 mt-2">
+              <i class="bi bi-plus-circle me-2"></i>افزودن مخاطب
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // فیلتر جستجو
+  document.getElementById('searchInput')?.addEventListener('keyup', function() {
+    const filter = this.value.toUpperCase();
+    document.querySelectorAll('.contact-item').forEach(item => {
+      const name = item.dataset.name?.toUpperCase() || '';
+      const email = item.dataset.email?.toUpperCase() || '';
+      item.style.display = (name.includes(filter) || email.includes(filter)) ? 'flex' : 'none';
+    });
+  });
+</script>
+{% endblock %}

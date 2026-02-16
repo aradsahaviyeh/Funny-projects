@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ورود{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card shadow-lg border-0 rounded-4 p-4 p-md-5" style="max-width: 450px; width: 100%;">
+    <div class="text-center mb-4">
+      <i class="bi bi-chat-dots-fill fs-1 text-primary"></i>
+      <h3 class="fw-bold mt-3">ورود به پیام‌رسان</h3>
+      <p class="text-secondary small">برای ورود اطلاعات خود را وارد کنید</p>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label fw-semibold">نام کاربری</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0"><i class="bi bi-person"></i></span>
+          {{ form.username }}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">ایمیل</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0"><i class="bi bi-envelope"></i></span>
+          {{ form.email }}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">رمز عبور</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
+          {{ form.password }}
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="remember">
+          <label class="form-check-label small" for="remember">مرا به خاطر بسپار</label>
+        </div>
+        <a href="#" class="text-primary text-decoration-none small">فراموشی رمز؟</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary-gradient w-100 py-2 rounded-pill">
+        <i class="bi bi-box-arrow-in-left me-2"></i>ورود
+      </button>
+
+      <div class="text-center mt-4">
+        <span class="text-secondary">حساب کاربری ندارید؟</span>
+        <a href="{% url 'authentication_app:signin' %}" class="text-primary fw-bold text-decoration-none">ثبت‌نام</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

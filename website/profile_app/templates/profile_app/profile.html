@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}پروفایل {% if contact %} {{ contact }} {% else %} {{ profile.profile_name }} {% endif %} {% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center min-vh-100 py-5">
+  <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="max-width: 550px; width: 100%;">
+    <!-- هدر گرادینت -->
+    <div class="bg-primary-gradient text-white text-center p-4 pb-5">
+      <img src="{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'images/Circle-icons-profile.svg.png' %}{% endif %}"
+           class="avatar-lg rounded-circle border border-3 border-white shadow mb-3" alt="avatar">
+      <h4 class="fw-bold">{% if contact %} {{ contact }} {% else %} {{ profile.profile_name }} {% endif %}</h4>
+      {% if profile.profile_username %}
+        <span class="badge bg-white bg-opacity-25 rounded-pill px-3 py-2">
+          <i class="bi bi-at"></i> {{ profile.profile_username }}
+        </span>
+      {% endif %}
+    </div>
+
+    <!-- بدنه -->
+    <div class="p-4">
+      <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 mb-3">
+        <span class="bg-primary-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+          <i class="bi bi-chat-quote"></i>
+        </span>
+        <div>
+          <small class="text-secondary d-block">بیوگرافی</small>
+          <span class="fw-semibold">{% if contact %} {% if contact.profile_bio %} {{ contact.profile_bio }} {% else %} {{ contact.profile_bio|default:"...هنوز چیزی نوشته نشده" }} {% endif %}  {% else %} {{ profile.profile_bio|default:"...هنوز چیزی نوشته نشده" }} {% endif %}</span>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 mb-3">
+        <span class="bg-primary-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+          <i class="bi bi-envelope"></i>
+        </span>
+        <div>
+          <small class="text-secondary d-block">ایمیل</small>
+          <span class="fw-semibold">{{ profile.email|default:"-" }}</span>
+        </div>
+      </div>
+
+      {% if profile.gender %}
+      <div class="d-flex align-items-center gap-3 p-3 bg-light rounded-3 mb-4">
+        <span class="bg-primary-gradient text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+          <i class="bi bi-gender-{{ profile.gender }}"></i>
+        </span>
+        <div>
+          <small class="text-secondary d-block">جنسیت</small>
+          <span class="fw-semibold">{{ profile.gender|title }}</span>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="d-flex gap-3 mt-4">
+        {% if request.user.profile == profile %}
+          <a href="#" class="btn btn-primary-gradient flex-grow-1 rounded-pill py-2">
+            <i class="bi bi-pencil-square me-2"></i>ویرایش پروفایل
+          </a>
+          <a href="javascript:history.back()" class="btn btn-outline-secondary flex-grow-1 rounded-pill py-2">
+            <i class="bi bi-arrow-right me-2"></i>بازگشت
+          </a>
+        {% else %}
+          <a href="{% url 'message_detail' contact.id %}" class="btn btn-primary-gradient flex-grow-1 rounded-pill py-2">
+            <i class="bi bi-chat-dots me-2"></i>ارسال پیام
+          </a>
+          <a href="javascript:history.back()" class="btn btn-outline-secondary flex-grow-1 rounded-pill py-2">
+            <i class="bi bi-arrow-right me-2"></i>بازگشت
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

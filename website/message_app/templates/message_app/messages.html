@@ -1,98 +1,96 @@
-{% extends './base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block style %}
-  <link rel="stylesheet" href="{% static 'message_app/messages.css' %}" />
-  <link rel="stylesheet" href="{% static 'message_app/chats.css' %}" />
-{% endblock %}
+{% block title %}پیام‌ها{% endblock %}
 
 {% block content %}
-  <div class="row" style="height: 100vh;">
-    {% include 'message_app/chats.html' %}
+<div class="container-fluid p-0" style="height: 100vh;">
+  <div class="row g-0 h-100">
 
-    {% if message_detail %}
-    <div class="col-8 position-relative p-0" style="height: 100vh;">
-      <div class="bg-primary text-light">
-        <div class="container py-3 d-flex align-items-center" id="chat_profile_info">
-          <img src="{% if contact.profile_photo %}
-              {{ contact.profile_photo.url }}
-            {% else %}
-              {% static 'message_app/images/Circle-icons-profile.svg.png' %}
-            {% endif %}"
-            width="45"
-            height="45"
-            class="rounded-circle me-2" />
 
-          <p class="ms-3 mb-0">{{ contact_name }}</p>
-        </div>
-      </div>
+    <div class="col-12 col-md-4 col-lg-3 border-start h-100 overflow-hidden" style="background: white;">
+      {% include 'message_app/chats.html' %}
+    </div>
 
-      <div class="container overflow-auto" style="height: calc(100vh - 170px); padding-top: 1rem; padding-bottom: 120px;">
-        {% for message in messages %}
-          {% if message.sender == request.user.profile %}
-            <div class="w-50 ms-auto mb-3">
-              <div class="bg-primary text-white rounded-3 p-3 shadow position-relative">
-                <p class="mb-1">{{ message.text }}</p>
-                <small class="d-flex justify-content-end align-items-center text-white-50">
-                  <span class="me-1">{{ message.created_at|time:'H:i A' }}</span>
-                  <span class="message-status">
-                    {% if message.is_read %}
-                      &#10003;&#10003; <!-- دو تیک -->
-                    {% else %}
-                      &#10003; <!-- یک تیک -->
-                    {% endif %}
-                  </span>
-                </small>
-              </div>
-            </div>
-          {% else %}
 
-          
-            <!-- پیام دریافت‌شده -->
-            <div class="w-50 mb-3">
-              <div class="bg-light rounded-3 p-3 shadow position-relative">
-                <p class="mb-1">{{ message.text }}</p>
-                <small class="d-block text-start text-muted">{{ message.created_at|time:'H:i A' }}</small>
-              </div>
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      <div class="position-absolute bottom-0 start-50 translate-middle-x w-75 pb-3">
-        <form action="{% if contact %}{% url 'send_message' contact.id %}{% endif %}" method="post" class="shadow rounded-pill overflow-hidden bg-white" id="my_form">
-          {% csrf_token %}
-          <div class="input-group">
-            <input type="text" name="text" class="form-control border-0 rounded-pill rounded-end p-3" placeholder="پیام..." />
-            <button id="bt" type="submit" class="btn btn-primary border-0 rounded-pill rounded-start px-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11Z" />
-              </svg>
-            </button>
+    <div class="col-12 col-md-8 col-lg-9 h-100 d-flex flex-column bg-light bg-opacity-25">
+      {% if message_detail %}
+        <!-- هدر چت -->
+        <div class="bg-white p-3 d-flex align-items-center border-bottom">
+          <img src="{% if contact.profile_photo %}{{ contact.profile_photo.url }}{% else %}{% static 'message_app/images/Circle-icons-profile.svg.png' %}{% endif %}"
+               class="avatar me-3"
+               onclick="window.location.href='{% url 'profile_app:contact_profile' contact.id %}'"
+               style="cursor: pointer;">
+          <div class="flex-grow-1">
+            <h6 class="fw-bold mb-0" onclick="window.location.href='{% url 'profile_app:contact_profile' contact.id %}'" style="cursor: pointer;">
+              {{ contact_name }}
+            </h6>
           </div>
-        </form>
-      </div>
+          <div class="dropdown">
+            <button class="btn btn-light rounded-circle py-2" data-bs-toggle="dropdown">
+              <i class="bi bi-three-dots-vertical"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3 p-2">
+              <li><a class="dropdown-item rounded-3" href="{% url 'profile_app:contact_profile' contact.id %}"><i class="bi bi-person me-2"></i>مشاهده پروفایل</a></li>
+              <li><a class="dropdown-item rounded-3 text-danger" href="#"><i class="bi bi-trash me-2"></i>حذف گفتگو</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- ناحیه پیام‌ها -->
+        <div class="flex-grow-1 overflow-auto p-4" id="messagesContainer">
+          {% for message in messages %}
+            {% if message.sender == request.user.profile %}
+              <div class="d-flex justify-content-end mb-3">
+                <div class="bg-primary-gradient text-white rounded-3 p-3" style="max-width: 70%; border-radius: 18px 18px 5px 18px !important;">
+                  <p class="mb-1 small">{{ message.text }}</p>
+                  <div class="d-flex justify-content-end align-items-center gap-2">
+                    <small class="opacity-75" style="font-size: 0.7rem;">{{ message.created_at|time:'H:i' }}</small>
+                    <i class="bi bi-check2-all {% if message.is_read %}text-info{% else %}opacity-75{% endif %}" style="font-size: 1rem;"></i>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="d-flex mb-3">
+                <img src="{% if contact.profile_photo %}{{ contact.profile_photo.url }}{% else %}{% static 'message_app/images/Circle-icons-profile.svg.png' %}{% endif %}"
+                     class="avatar-sm rounded-circle me-2 align-self-end">
+                <div class="bg-white border-0 shadow-sm rounded-3 p-3" style="max-width: 70%; border-radius: 18px 18px 18px 5px !important;">
+                  <p class="mb-1 small">{{ message.text }}</p>
+                  <small class="text-secondary" style="font-size: 0.7rem;">{{ message.created_at|time:'H:i' }}</small>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <!-- فرم ارسال پیام -->
+        <div class="bg-white p-3 border-top">
+          <form action="{% url 'send_message' contact.id %}" method="post" class="d-flex gap-2">
+            {% csrf_token %}
+            <input type="text" name="text" class="form-control bg-light border-0 " placeholder="پیام خود را بنویسید..." autofocus>
+            <button type="submit" class="btn bg-primary text-light d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+              <i class="bi bi-send-fill"></i>
+            </button>
+          </form>
+        </div>
+      {% else %}
+        <div class="h-100 d-flex flex-column align-items-center justify-content-center">
+          <i class="bi bi-chat-dots fs-1 text-primary opacity-25"></i>
+          <h5 class="fw-bold mt-3">گفتگویی انتخاب نشده</h5>
+          <p class="text-secondary small">برای شروع گفتگو، یک مخاطب را انتخاب کنید</p>
+          <a href="{% url 'contact_app:add_contact' %}" class="btn btn-primary-gradient rounded-pill px-5 py-2 mt-2">
+            <i class="bi bi-person-plus me-2"></i>افزودن مخاطب جدید
+          </a>
+        </div>
+      {% endif %}
     </div>
   </div>
-  {% endif %}
+</div>
 
-
-
-
-
-  {% if message_detail %}
-  <script>
-    let userprofile = document.querySelectorAll('#chat_profile_info')
-    
-    userprofile.forEach((profile) => {
-      profile.addEventListener('click', () => {
-        window.location.href = '{% url "contact_profile" contact.id %}';
-      })
-    })
-  </script>
-  {% endif %}
-{% endblock %}
-
-{% block scripts %}
-  <script src="{% static 'message_app/messages.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('messagesContainer');
+    if (container) container.scrollTop = container.scrollHeight;
+  });
+</script>
 {% endblock %}

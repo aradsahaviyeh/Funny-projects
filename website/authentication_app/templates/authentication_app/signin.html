@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ثبت نام{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+  <div class="card shadow-lg border-0 rounded-4 p-4 p-md-5" style="max-width: 450px; width: 100%;">
+    <div class="text-center mb-4">
+      <i class="bi bi-chat-dots-fill fs-1 text-primary"></i>
+      <h3 class="fw-bold mt-3">ثبت نام در پیام رسان</h3>
+      <p class="text-secondary small">برای ثبت نام اطلاعات خود را وارد کنید</p>
+    </div>
+
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label fw-semibold">نام کاربری</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0"><i class="bi bi-person"></i></span>
+            {{ form.username }}
+          {% if form.username.errors %}
+            <p class="text-danger">{{ form.username.errors }}</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">ایمیل</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0 m-0"><i class="bi bi-envelope"></i></span>
+            {{ form.email }}
+        </div>
+        {% if form.email.errors %}
+          <p class="text-danger" >{{ form.email.errors }}</p>
+        {% endif %}
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">رمز عبور</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
+            {{ form.password1 }}
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label fw-semibold">تکرار رمز عبور</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
+            {{ form.password2 }}
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="remember">
+          <label class="form-check-label small" for="remember">مرا به خاطر بسپار</label>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary-gradient w-100 py-2 rounded-pill">
+        <i class="bi bi-box-arrow-in-left me-2"></i>ثبت نام
+      </button>
+
+      <div class="text-center mt-4">
+        <span class="text-secondary">حساب کاربری دارید؟</span>
+        <a href="{% url 'authentication_app:login' %}" class="text-primary fw-bold text-decoration-none">ورود</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

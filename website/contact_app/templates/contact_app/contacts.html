@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block style %}
+<style>
+    .contacts-page {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+        padding: 30px;
+    }
+
+    .contacts-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(13, 110, 253, 0.1);
+        padding: 30px;
+    }
+
+    .contacts-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    }
+
+    .contacts-header h3 {
+        font-weight: 700;
+        color: #333;
+        margin: 0;
+    }
+
+    .contacts-header i {
+        color: #0d6efd;
+        font-size: 28px;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: 20px;
+        background: #f8faff;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .contact-item:hover {
+        background: white;
+        border-color: #0d6efd;
+        box-shadow: 0 5px 20px rgba(13, 110, 253, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .contact-avatar {
+        width: 55px;
+        height: 55px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .contact-info {
+        flex-grow: 1;
+        margin-right: 15px;
+    }
+
+    .contact-name {
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .contact-email {
+        font-size: 0.85rem;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+    }
+
+    .contact-email i {
+        font-size: 0.8rem;
+        margin-left: 5px;
+        color: #adb5bd;
+    }
+
+    .contact-badge {
+        background: linear-gradient(145deg, #0d6efd, #0a58ca);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+    }
+
+    .empty-state i {
+        font-size: 70px;
+        color: #0d6efd;
+        opacity: 0.3;
+        margin-bottom: 20px;
+    }
+
+    .empty-state h5 {
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        color: #6c757d;
+        margin-bottom: 25px;
+    }
+
+    .btn-add-contact {
+        background: linear-gradient(145deg, #0d6efd, #0a58ca);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-add-contact:hover {
+        background: linear-gradient(145deg, #0a58ca, #084298);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(13, 110, 253, 0.3);
+        color: white;
+    }
+
+    .search-box {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .search-box i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #adb5bd;
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 12px 20px;
+        padding-right: 45px;
+        border: 2px solid #e9ecef;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .search-box input:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+        outline: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contacts-page">
+    <div class="contacts-container fade-in">
+        <div class="contacts-header">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-people-fill me-3"></i>
+                <h3>مخاطبین من</h3>
+            </div>
+            <span class="contact-badge">{{ contacts|length }} مخاطب</span>
+        </div>
+
+        <!-- جستجو -->
+        <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" id="searchInput" placeholder="جستجوی مخاطب..." onkeyup="searchContacts()">
+        </div>
+
+        {% if contacts %}
+            <ul class="list-unstyled" id="contactsList">
+                {% for contact in contacts %}
+                    <li class="contact-item"
+                        data-profile-id="{{ contact.contact.id }}"
+                        data-name="{{ contact.contact.profile_name }}"
+                        data-email="{{ contact.contact.email }}">
+
+                        <img src="{% if contact.contact.profile_photo %}
+                                    {{ contact.contact.profile_photo.url }}
+                                  {% else %}
+                                    {% static 'message_app/images/Circle-icons-profile.svg.png' %}
+                                  {% endif %}"
+                             class="contact-avatar"
+                             alt="Profile">
+
+                        <div class="contact-info">
+                            <div class="contact-name">{{ contact }}</div>
+                            <div class="contact-email">
+                                <i class="bi bi-envelope"></i>
+                                {{ contact.contact.email }}
+                            </div>
+                        </div>
+
+                        <div class="contact-action">
+                            <span class="badge bg-primary bg-opacity-10 text-primary p-3 rounded-circle">
+                                <i class="bi bi-chat-dots"></i>
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty-state">
+                <i class="bi bi-person-plus"></i>
+                <h5>هنوز مخاطبی ندارید</h5>
+                <p class="text-muted">با اضافه کردن مخاطب جدید، می‌توانید گفتگو را شروع کنید</p>
+                <button class="btn btn-add-contact" onclick="window.location.href='{% url 'add_contact' %}'">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    افزودن مخاطب
+                </button>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // کلیک روی مخاطب
+    document.querySelectorAll('.contact-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const profileId = this.dataset.profileId;
+            if (profileId) {
+                window.location.href = `/message_app/messages/${profileId}/`;
+            }
+        });
+    });
+
+    // جستجوی مخاطبین
+    function searchContacts() {
+        const input = document.getElementById('searchInput');
+        const filter = input.value.toUpperCase();
+        const contacts = document.querySelectorAll('.contact-item');
+
+        contacts.forEach(contact => {
+            const name = contact.dataset.name.toUpperCase();
+            const email = contact.dataset.email.toUpperCase();
+
+            if (name.includes(filter) || email.includes(filter)) {
+                contact.style.display = 'flex';
+            } else {
+                contact.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}
